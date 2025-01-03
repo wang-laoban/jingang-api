@@ -1,0 +1,6 @@
+*.zip
+cmd/api_x64
+cmd/cmd_amd64
+cmd/cmd-debug
+cmd/nohup.out
+cmd/mq/*
