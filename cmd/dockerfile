@@ -3,6 +3,7 @@ MAINTAINER haibo
 
 WORKDIR /home/app
 COPY ./api /home/app/
+COPY ./data.xlsx /home/app/
 RUN ls -l /home/app
 RUN chmod +x /home/app/api
 ENTRYPOINT ["/home/app/api"]

@@ -21,9 +21,9 @@ var topic = "video/gateway/edge/video/alarm/#"
 var cameraMap = make(map[string]CameraData)
 
 type CameraData struct {
-	Area       string
-	Location   string
-	CameraName string
+	Area       string `json:"area"`
+	Location   string `json:"location"`
+	CameraName string `json:"cameraName"`
 }
 
 var ModelMap = map[string]string{
@@ -104,6 +104,7 @@ type RequestPayload struct {
 }
 
 var apiURL = "http://172.41.166.150:7002/jjg/anon/videoAI/warning/save"
+var imgFix = "http://192.168.108.5:8080/video-gateway/"
 
 func main() {
 	filePath := "./data.xlsx"
@@ -157,7 +158,7 @@ func messageHandler(client mqtt.Client, msg mqtt.Message) {
 
 	// 获取图片Base64
 	// img := GetImageFromUrl("https://k.sinaimg.cn/n/sinacn10109/653/w640h813/20190414/0e44-hvscktf5572580.png/w700d1q75cms.jpg")
-	img := GetImageFromUrl(mqttMsg.ImageURL)
+	img := GetImageFromUrl(imgFix + mqttMsg.Detail)
 	imgStr, err := ImageToBase64(img)
 	if err != nil {
 		log.Fatal(err)
