@@ -4,3 +4,4 @@ cmd/cmd_amd64
 cmd/cmd-debug
 cmd/nohup.out
 cmd/mq/*
+cmd/cmd

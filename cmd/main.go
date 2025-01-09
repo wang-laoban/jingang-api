@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -18,6 +19,7 @@ import (
 // 根据实际的消息格式，调整了结构体的字段
 // 从 MQTT 消息中获取的参数：modeName, deviceCode, deviceId, deviceName, modelCode, image_url 等
 var topic = "video/gateway/edge/video/alarm/#"
+var isDebug bool
 var cameraMap = make(map[string]CameraData)
 
 type CameraData struct {
@@ -104,9 +106,17 @@ type RequestPayload struct {
 }
 
 var apiURL = "http://172.41.166.150:7002/jjg/anon/videoAI/warning/save"
-var imgFix = "http://192.168.108.5:8080/video-gateway/"
+
+// var imgFix = "http://192.168.108.5:8080/video-gateway/"
+var imgFix = "http://192.168.108.2:8080/video-gateway/"
 
 func main() {
+	//获取程序运行的flag 参数判断是否需要打印
+	isDebug := os.Getenv("DEBUG")
+	// flag.BoolVar(&isDebug, "debug", false, "Enable debug mode")
+	// flag.Parse()
+	fmt.Println("Debug mode:", isDebug)
+
 	filePath := "./data.xlsx"
 	//获取url中的图片，并将图片转为base64
 	err := LoadExcelData(filePath)
@@ -186,8 +196,12 @@ func messageHandler(client mqtt.Client, msg mqtt.Message) {
 	if err != nil {
 		log.Printf("Failed to marshal request payload: %v", err)
 		return
+
 	}
-	// fmt.Println("POST:", string(jsonData))
+
+	if isDebug {
+		fmt.Println("POST:", string(jsonData))
+	}
 
 	req, err := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonData))
 	if err != nil {
